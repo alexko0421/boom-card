@@ -1,4 +1,4 @@
-# Ink Bloom
+# Bloom Card
 
 A photo card in one HTML file. Photos switch with an ink bloom that spreads from where you tap, the card's edges are feathered into the page, and deleting a photo feeds it through a desk shredder.
 
@@ -12,7 +12,7 @@ From the root of this repository:
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000/ink-bloom/. Photos load from [Lorem Picsum](https://picsum.photos), so the page needs a connection.
+Then open http://localhost:8000/bloom-card/. Photos load from [Lorem Picsum](https://picsum.photos), so the page needs a connection.
 
 ## What's inside
 
