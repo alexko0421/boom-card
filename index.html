@@ -1,0 +1,91 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>UI Lab</title>
+<meta name="description" content="Interface pieces by Alex Ko: motion, shaders, surfaces and small physics.">
+<style>
+  /* The same quiet grey page the pieces sit on, so opening one feels like
+     stepping into it rather than leaving. The work leads; no header. */
+  :root {
+    --page: #ececec;
+    --ink: #1a1a1a;
+    --muted: #7d7d80;
+    --line: rgb(0 0 0 / 0.08);
+    --serif: "New York", "Iowan Old Style", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "Helvetica Neue", sans-serif;
+    --ease-out: cubic-bezier(0.23, 1, 0.32, 1);
+  }
+  * { box-sizing: border-box; }
+  html { background: var(--page); }
+  body {
+    margin: 0;
+    min-height: 100vh;
+    display: grid;
+    grid-template-rows: 1fr auto;
+    gap: 48px;
+    padding: 56px max(16px, env(safe-area-inset-right, 0px)) 32px max(16px, env(safe-area-inset-left, 0px));
+    background: var(--page);
+    color: var(--ink);
+    font-family: var(--sans);
+    -webkit-font-smoothing: antialiased;
+  }
+  .pieces {
+    width: min(1080px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 480px), 1fr));
+    gap: 40px;
+    align-content: start;
+  }
+  .piece { display: grid; gap: 16px; }
+  .piece a.shot {
+    display: block;
+    border-radius: 16px;
+    overflow: hidden;
+    background: #e4e4e4;
+    box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.06), 0 12px 30px -16px rgb(0 0 0 / 0.25);
+    transition: transform 200ms var(--ease-out), box-shadow 200ms var(--ease-out);
+  }
+  .piece a.shot img { display: block; width: 100%; height: auto; }
+  @media (hover: hover) and (pointer: fine) {
+    .piece a.shot:hover { transform: translateY(-2px); box-shadow: 0 0 0 0.5px rgb(0 0 0 / 0.08), 0 18px 36px -16px rgb(0 0 0 / 0.3); }
+  }
+  .piece a.shot:active { transform: scale(0.99); }
+  .piece a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+  .meta { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; flex-wrap: wrap; padding: 0 4px; }
+  .meta h2 { margin: 0; font: 600 20px/1.2 var(--serif); letter-spacing: -0.01em; }
+  .meta h2 a { color: inherit; text-decoration: none; }
+  .meta p { margin: 6px 0 0; max-width: 56ch; font-size: 14px; line-height: 1.5; color: var(--muted); }
+  .links { display: flex; gap: 16px; font-size: 13px; font-weight: 500; }
+  .links a { color: var(--ink); text-decoration: none; border-bottom: 1px solid var(--line); padding-bottom: 1px; transition: border-color 150ms ease-out; }
+  .links a:hover { border-color: var(--ink); }
+  footer { text-align: center; font-size: 12px; color: var(--muted); }
+  footer a { color: inherit; }
+  @media (prefers-reduced-motion: reduce) {
+    .piece a.shot { transition: none; }
+  }
+</style>
+</head>
+<body>
+  <main class="pieces">
+    <article class="piece">
+      <a class="shot" href="bloom-card/" aria-label="Open Bloom Card">
+        <img src="bloom-card/preview.jpg" width="2246" height="900" alt="Bloom Card: the card at rest with its settings panel, a photo blooming in, and a photo feeding into the shredder">
+      </a>
+      <div class="meta">
+        <div>
+          <h2><a href="bloom-card/">Bloom Card</a></h2>
+          <p>A photo card. Photos switch with an ink bloom that spreads from your tap, the edges are feathered into the page, and deleting a photo feeds it through a desk shredder.</p>
+        </div>
+        <div class="links">
+          <a href="bloom-card/">Open</a>
+          <a href="https://github.com/alexko0421/ui-lab/tree/main/bloom-card">Source</a>
+        </div>
+      </div>
+    </article>
+  </main>
+  <footer>Interface pieces by Alex Ko · <a href="https://github.com/alexko0421/ui-lab">GitHub</a> · MIT</footer>
+</body>
+</html>
