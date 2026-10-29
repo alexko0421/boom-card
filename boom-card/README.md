@@ -1,12 +1,12 @@
-# Bloom Card
+# Boom Card
 
 A photo card in one HTML file. Photos switch with an ink bloom that spreads from where you tap, the card's edges are feathered into the page, and deleting a photo feeds it through a desk shredder.
 
 No build step and no dependencies: WebGL, Canvas 2D and plain CSS.
 
-**[Try it live →](https://alexko0421.github.io/ui-lab/bloom-card/)**
+**[Try it live →](https://alexko0421.github.io/ui-lab/boom-card/)**
 
-![Bloom Card: the card at rest with its settings panel, a photo blooming in, and a photo feeding into the shredder](preview.jpg)
+![Boom Card: the card at rest with its settings panel, a photo blooming in, and a photo feeding into the shredder](preview.jpg)
 
 ## Run it
 
@@ -16,7 +16,7 @@ From the root of this repository:
 python3 -m http.server 8000
 ```
 
-Then open http://localhost:8000/bloom-card/. Photos load from [Lorem Picsum](https://picsum.photos), so the page needs a connection.
+Then open http://localhost:8000/boom-card/. Photos load from [Lorem Picsum](https://picsum.photos), so the page needs a connection.
 
 ## What's inside
 

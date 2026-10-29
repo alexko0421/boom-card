@@ -6,9 +6,9 @@ Interface pieces built while learning front-end craft: motion, shaders, surfaces
 
 | Piece | What it is | Live |
 | --- | --- | --- |
-| [Bloom Card](bloom-card/) | A photo card. Photos switch with an ink bloom that spreads from your tap, the edges are feathered into the page, and deleting a photo feeds it through a desk shredder. WebGL, Canvas 2D, a Verlet strip simulation. | [Open](https://alexko0421.github.io/ui-lab/bloom-card/) |
+| [Boom Card](boom-card/) | A photo card. Photos switch with an ink bloom that spreads from your tap, the edges are feathered into the page, and deleting a photo feeds it through a desk shredder. WebGL, Canvas 2D, a Verlet strip simulation. | [Open](https://alexko0421.github.io/ui-lab/boom-card/) |
 
-![Bloom Card](bloom-card/preview.jpg)
+![Boom Card](boom-card/preview.jpg)
 
 ## Run them
 
