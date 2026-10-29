@@ -4,6 +4,10 @@ A photo card in one HTML file. Photos switch with an ink bloom that spreads from
 
 No build step and no dependencies: WebGL, Canvas 2D and plain CSS.
 
+**[Try it live →](https://alexko0421.github.io/ui-lab/bloom-card/)**
+
+![Bloom Card: the card at rest with its settings panel, a photo blooming in, and a photo feeding into the shredder](preview.jpg)
+
 ## Run it
 
 From the root of this repository:
