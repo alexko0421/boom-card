@@ -661,14 +661,20 @@ float roundBox(vec2 p, vec2 halfSize, float r) {
 }
 
 // Golden-angle spiral taps: a soft disc blur without the doubled-image look of a cross kernel.
+// The card-to-image mapping is worked out once and the spiral is turned by
+// rotation, so each tap is little more than a texture read.
 vec3 tap(sampler2D tex, vec2 size, float zoom, vec2 uv, float blurPx) {
-  if (blurPx < 0.5) return texture2D(tex, cover(uv, size, zoom)).rgb;
+  float k = max(uCard.z / size.x, uCard.w / size.y) * zoom;
+  vec2 perPx = 1.0 / (size * k); // image uv per card pixel
+  vec2 base = (uv - 0.5) * uCard.zw * perPx + 0.5;
+  if (blurPx < 0.5) return texture2D(tex, base).rgb;
+  vec2 rot = vec2(cos(2.39996), sin(2.39996));
+  vec2 dir = vec2(1.0, 0.0);
   vec3 c = vec3(0.0);
   for (int i = 0; i < 16; i++) {
-    float f = float(i);
-    float rr = sqrt((f + 0.5) / 16.0) * blurPx;
-    float th = f * 2.39996;
-    c += texture2D(tex, cover(uv + vec2(cos(th), sin(th)) * rr / uCard.zw, size, zoom)).rgb;
+    float rr = sqrt((float(i) + 0.5) / 16.0) * blurPx;
+    c += texture2D(tex, base + dir * rr * perPx).rgb;
+    dir = vec2(dir.x * rot.x - dir.y * rot.y, dir.x * rot.y + dir.y * rot.x);
   }
   return c / 16.0;
 }
@@ -720,11 +726,14 @@ void main() {
   float R = uProg * maxR;
 
   // Ragged ink edge: noise sampled in CSS pixels so the grain looks the same on every screen.
-  vec2 q = p / uDpr;
-  float ink = fbm(q * 0.011 + uSeed + vec2(uTime * 0.12, -uTime * 0.09));
-  float fine = fbm(q * 0.045 - uSeed + uTime * 0.25);
-  float wobble = (ink - 0.5) * amp + (fine - 0.5) * amp * 0.35;
-  wobble *= smoothstep(0.0, 0.12, uProg);
+  // (Nothing to roughen while no bloom is running, so the noise is skipped then.)
+  float wobble = 0.0;
+  if (uProg > 0.0) {
+    vec2 q = p / uDpr;
+    float ink = fbm(q * 0.011 + uSeed + vec2(uTime * 0.12, -uTime * 0.09));
+    float fine = fbm(q * 0.045 - uSeed + uTime * 0.25);
+    wobble = ((ink - 0.5) * amp + (fine - 0.5) * amp * 0.35) * smoothstep(0.0, 0.12, uProg);
+  }
 
   float sdf = r + wobble - R;
 
@@ -755,6 +764,12 @@ void main() {
   if (uTide > 0.5) {
     vec4 fx = shred(p);
     gl_FragColor = uRaw > 0.5 ? vec4(mix(PAGE, fx.rgb, fx.a), 1.0) : vec4(fx.rgb * fx.a, fx.a);
+    return;
+  }
+
+  // Out in the spill the frame is fully transparent: skip the blur taps.
+  if (uRaw < 0.5 && alpha <= 0.0) {
+    gl_FragColor = vec4(0.0);
     return;
   }
 
@@ -1399,6 +1414,10 @@ function redraw() {
 }
 
 function syncSize() {
+  // The stage follows the frame at once while the slider is dragged; its slow
+  // footprint transition would otherwise restart on every tick and keep the
+  // whole page re-laying out.
+  stage.style.transition = "none";
   const v = Number(sizeInput.value);
   document.documentElement.style.setProperty("--card-w", `${v}px`);
   paintFill(sizeInput, sizeInput.min);
@@ -1407,7 +1426,9 @@ function syncSize() {
   redraw();
 }
 sizeInput.addEventListener("input", syncSize);
+sizeInput.addEventListener("change", () => { stage.style.transition = ""; });
 syncSize();
+stage.style.transition = "";
 
 // Zoom belongs to each photo; the slider shows the current one's.
 const zoomInput = document.getElementById("zoom");
