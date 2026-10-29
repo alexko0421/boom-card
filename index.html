@@ -587,7 +587,9 @@ const canvas = document.getElementById("gl");
 const caption = document.getElementById("caption");
 const undoHint = document.getElementById("undo-hint");
 const thumbsEl = document.getElementById("thumbs");
-const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: false });
+// Premultiplied output: iOS Safari was showing the transparent spill around
+// the card as a white box with premultipliedAlpha: false.
+const gl = canvas.getContext("webgl", { antialias: false, premultipliedAlpha: true });
 const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
 
 const VERT = `
@@ -752,7 +754,7 @@ void main() {
   // Deleting: the shredder takes the photo, so it draws the whole frame.
   if (uTide > 0.5) {
     vec4 fx = shred(p);
-    gl_FragColor = uRaw > 0.5 ? vec4(mix(PAGE, fx.rgb, fx.a), 1.0) : vec4(fx.rgb, fx.a);
+    gl_FragColor = uRaw > 0.5 ? vec4(mix(PAGE, fx.rgb, fx.a), 1.0) : vec4(fx.rgb * fx.a, fx.a);
     return;
   }
 
@@ -769,7 +771,8 @@ void main() {
 
   color = mix(vec3(0.985), color, coverage);
 
-  gl_FragColor = vec4(color, (uRaw > 0.5 ? 1.0 : alpha) * (uFromEmpty > 0.5 ? max(mask, rim) : 1.0));
+  float outA = (uRaw > 0.5 ? 1.0 : alpha) * (uFromEmpty > 0.5 ? max(mask, rim) : 1.0);
+  gl_FragColor = vec4(color * outA, outA);
 }`;
 
 function compile(type, src) {
